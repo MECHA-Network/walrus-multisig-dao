@@ -4,8 +4,11 @@ document.body.appendChild(div);
 
 const root = createRoot(div);
 root.render(
-    <div>
+    <div className='text-white'>
       Content from content/index.tsx
+      Content from content/index.tsx
+      <div>
+    </div>
     </div>
 );
 

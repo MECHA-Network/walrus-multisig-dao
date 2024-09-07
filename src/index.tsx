@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Panel from "@pages/panel/Panel";
+import c from "@pages/content";
 import "./index.css";
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 
@@ -9,7 +10,7 @@ console.log("React injected from index.tsx");
 root.render(
   <React.StrictMode>
     <>
-      {/*<h1>Content from index.tsx</h1>*/}
+      {/* <h1>Content from index.tsx</h1> */}
       <Panel/>
     </>
   </React.StrictMode>,
