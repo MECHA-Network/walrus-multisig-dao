@@ -1,29 +1,55 @@
 import './index.css';
+
+import { encryptAndStoreData, decryptAndGetData } from '../../../crypto';
 interface CustomCSSProperties extends React.CSSProperties {
     '--i': string;
 }
 
-export const Auth = () => {
+export function Auth () {
+    const accountCreated= true;
+    async function isUserLoggedIn(): Promise<boolean> {
+        const storedData = await chrome.storage.local.get("isLoggedIn");
+        return storedData.isLoggedIn === true;
+      }
+      
+     async function login(e: { preventDefault: () => void; }) {
+        e.preventDefault()
+        console.log("test....");
+        await encryptAndStoreData("test", "test")
+        const test = await decryptAndGetData("test", "test")
+     }
+
+     async function register(e: { preventDefault: () => void; }) {
+        e.preventDefault()
+        console.log("test....");
+        await encryptAndStoreData("test", "test")
+        const test = await decryptAndGetData("test", "test")
+     }
+
+
     return (
         <div className="container">
         <div className="login-box">
-            <h2>Login</h2>
+            <h2>{accountCreated ? "Enter your password 🔓" : "Create new password 🔐"}</h2>
             <form action="#">
-                <div className="input-box">
-                    <input type="email" required />
-                    <label>Email</label>
-                </div>
                 <div className="input-box">
                     <input type="password" required />
                     <label>Password</label>
                 </div>
-                <div className="forgot-pass">
-                    <a href="#">Forgot your password?</a>
-                </div>
-                <button type="submit" className="btn">Login</button>
+                {accountCreated && 
+                 <div className="input-box">
+                 <input type="password" required />
+                 <label>Retype Password</label>
+             </div>
+                }
+              
+                
+                <button onClick={accountCreated ? login : register} type='submit' className="btn">{accountCreated ? "Log In" : "Register"} </button>
                 <div className="signup-link">
-                    <a href="#">Signup</a>
+                
+                    <a href="#">{!accountCreated ? "Forgot your password?" : "Change password"}</a>
                 </div>
+            
             </form>
         </div>
         <span style={{ '--i': '0' } as CustomCSSProperties}></span>
@@ -76,6 +102,7 @@ export const Auth = () => {
         <span style={{ '--i': '47' } as CustomCSSProperties}></span>
         <span style={{ '--i': '48' } as CustomCSSProperties}></span>
         <span style={{ '--i': '49' } as CustomCSSProperties}></span>
+    
     </div>
     );
 }

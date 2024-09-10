@@ -1,10 +1,13 @@
 import '@pages/panel/Panel.css';
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { APP_COLLAPSE_WIDTH, APP_EXTEND_WIDTH, URLS } from './const';
 import classNames from 'classnames';
 import { Auth } from "../components/Auth";
+import { checkAccountCreated } from '../../crypto';
+
 import Button from './Button';
 export default function Panel(): JSX.Element {
+
   const [enabled, setEnabled] = useState(false);
   const [sidePanelWidth, setSidePanelWidth] = useState(enabled ? APP_EXTEND_WIDTH: APP_COLLAPSE_WIDTH);
   const [tabIndex, setTabIndex] = useState(0);
@@ -20,10 +23,11 @@ export default function Panel(): JSX.Element {
     handleOnToggle(newValue);
   }
   let loggedIn = false;
-  
   if (!loggedIn) {
+
+    // const accountCreated = await checkAccountCreated() as boolean
     return (
-      <Auth/>
+      <Auth />
     )
   }
   else{
