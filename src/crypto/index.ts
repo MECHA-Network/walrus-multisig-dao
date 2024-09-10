@@ -1,5 +1,8 @@
 import passworder from '@metamask/browser-passworder';
-import { getStorage } from '../utls/storage';
+import cryptoRandomString from 'crypto-random-string';
+import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
+
+import * as argon2 from 'argon2-browser';
 /**
  * Encrypts data using a user-provided password.
  *
@@ -50,3 +53,23 @@ export async function checkAccountCreated(): Promise<boolean> {
   const storedData = await chrome.storage.local.get("accountCreated");
   return storedData.accountCreated === true;
 }
+
+export async function saveSuiKeypairAndAddress(password: string){
+  const secretKey = await hashArgon2(password, cryptoRandomString({length: 16, type: 'base64'}))
+  let bytes32Key = Buffer.from(secretKey, "hex");
+  const keypair = Ed25519Keypair.fromSecretKey(bytes32Key);
+  const sui_address = keypair.getPublicKey().toSuiAddress();
+}
+
+export async function hashArgon2(password: string, salt: string): Promise<string> {
+    const hashResult = await argon2.hash({
+      pass: password,
+      salt: salt,
+      hashLen: 32
+    });
+    console.log('Hash:', hashResult.encoded);
+    console.log('Hash Hex:', hashResult.hashHex);
+    return hashResult.encoded;
+}
+
+
