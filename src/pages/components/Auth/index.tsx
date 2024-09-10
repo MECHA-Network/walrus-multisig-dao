@@ -44,7 +44,7 @@ export function Auth () {
                 }
               
                 
-                <button onClick={accountCreated ? login : register} type='submit' className="btn">{accountCreated ? "Log In" : "Register"} </button>
+                <button onClick={accountCreated ? login : register} type='submit' className="btn">{accountCreated ? "Log In" : "Create Password"} </button>
                 <div className="signup-link">
                 
                     <a href="#">{!accountCreated ? "Forgot your password?" : "Change password"}</a>
