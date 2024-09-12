@@ -1,8 +1,7 @@
 import './index.css';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { encryptAndStoreData, decryptAndGetData, checkAccountCreated } from '../../../crypto';
-
+import { encryptAndStoreData, decryptAndGetData, checkAccountCreated, getSuiKeyAndAddress } from '../../../crypto';
 
 interface CustomCSSProperties extends React.CSSProperties {
     '--i': string;
@@ -11,8 +10,9 @@ interface CustomCSSProperties extends React.CSSProperties {
 export function Auth () {
     const [accountCreated, setAccountCreated] = useState(false);
     const [pass, setPass] = useState("");
+    const [data, setData] = useState("");
     const [repass, setRePass] = useState("");
-     
+    
     useEffect(() => {
        async function setIfLoggedIn() {
         await checkAccountCreated();
@@ -27,9 +27,13 @@ export function Auth () {
       
      async function login(e: { preventDefault: () => void; }) {
         e.preventDefault()
-        console.log("logging in");
-
-        // await decryptAndGetData("test", "test")
+        try {
+            const res = await decryptAndGetData(pass);
+            setData(res)
+        } catch (error) {
+            toast.error("Wrong password")
+        }
+        
      }
 
      async function register(e: { preventDefault: () => void; }) {
@@ -38,8 +42,16 @@ export function Auth () {
         
         if (pass !== repass) {
             toast.error("Passwords do not match");
+            return;
         }
-        // await encryptAndStoreData("test", "test")
+        const newSuiCred = await getSuiKeyAndAddress(pass);
+        await chrome.storage.local.set({"suiAddress": newSuiCred.suiAddrs});
+        await encryptAndStoreData(pass, newSuiCred.scrKey);
+        await chrome.storage.local.set({"accountCreated": true});
+        const encrypted = await chrome.storage.local.get("encryptedPrivateKey")
+
+        // setAccountCreated(true);
+        toast.success("New Account 🎉" + JSON.stringify(encrypted))
      }
 
     return (

@@ -6,6 +6,7 @@ import buildContentScript from './utils/plugins/build-content-script';
 import { outputFolderName } from './utils/constants';
 import wasm from 'vite-plugin-wasm';
 import topLevelAwait from 'vite-plugin-top-level-await';
+import { Buffer } from 'buffer';
 
 const root = resolve(__dirname, 'src');
 const pagesDir = resolve(root, 'pages');
@@ -19,6 +20,7 @@ export default defineConfig({
       '@src': root,
       '@assets': assetsDir,
       '@pages': pagesDir,
+       buffer: 'buffer',
     },
   },
   plugins: [react(), makeManifest(), buildContentScript(), wasm(), topLevelAwait()],

@@ -1,4 +1,4 @@
-import passworder from '@metamask/browser-passworder';
+import { encrypt } from '@metamask/browser-passworder';
 import cryptoRandomString from 'crypto-random-string';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import argon2 from 'argon2-wasm-esm';
@@ -12,7 +12,9 @@ import argon2 from 'argon2-wasm-esm';
  */
 export async function encryptAndStoreData(password: string, data: any){
   try {
-    let encryptedData = await passworder.encrypt(password, data) as string || null;
+    let encryptedData = await encrypt(password, data) as string || null;
+    console.log({encryptedData});
+    
     chrome.storage.local.set({ encryptedPrivateKey: encryptedData }, () => {
       encryptedData = null;
     });
@@ -29,14 +31,12 @@ export async function encryptAndStoreData(password: string, data: any){
  * @param encryptedData - The encrypted data to be decrypted.
  * @returns A promise resolving to the decrypted data.
  */
-export async function decryptAndGetData(password: string, encryptedData: string): Promise<any> {
+export async function decryptAndGetData(password: string): Promise<any> {
   try {
-    const storedData = await chrome.storage.local.get("encryptedPrivateKey");
-    console.log({storedData});
-    return storedData
+    const encryptedPrivateKey = (await chrome.storage.local.get("encryptedPrivateKey")) as any;
     // const parsedEncryptedData = JSON.parse(encryptedData);
-    // const decryptedData = await passworder.decrypt(password, parsedEncryptedData);
-    // return decryptedData;
+    const decryptedData = await passworder.decrypt(password, encryptedPrivateKey);
+    return decryptedData;
   } catch (error) {
     console.error('Decryption failed:', error);
     throw error;
@@ -48,11 +48,16 @@ export async function checkAccountCreated(): Promise<boolean> {
   return storedData.accountCreated === true;
 }
 
-export async function saveSuiKeypairAndAddress(password: string){
-  const secretKey = await hashArgon2(password, cryptoRandomString({length: 16, type: 'base64'}))
-  let bytes32Key = Buffer.from(secretKey, "hex");
-  const keypair = Ed25519Keypair.fromSecretKey(bytes32Key);
-  const sui_address = keypair.getPublicKey().toSuiAddress();
+export async function getSuiKeyAndAddress(password: string): Promise<{ scrKey: string; suiAddrs: string }>{
+  // const secretKey = await hashArgon2(password, cryptoRandomString({length: 16, type: 'base64'}))
+  // let bytes32Key = Buffer.from(password, "hex");
+
+  const encoder = new TextEncoder();
+  const bytes32Key = encoder.encode(password+cryptoRandomString({length: 16, type: 'base64'}));
+  const hashBuffer = await crypto.subtle.digest('SHA-256', bytes32Key);
+  const keypair = Ed25519Keypair.fromSecretKey(new Uint8Array(hashBuffer));
+  const suiAddress = keypair.getPublicKey().toSuiAddress();
+  return {scrKey: keypair.getSecretKey(), suiAddrs: suiAddress}
 }
 
 async function hashArgon2(password: string, salt: string): Promise<string> {
