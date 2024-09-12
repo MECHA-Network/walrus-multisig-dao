@@ -4,7 +4,8 @@ import { defineConfig } from 'vite';
 import makeManifest from './utils/plugins/make-manifest';
 import buildContentScript from './utils/plugins/build-content-script';
 import { outputFolderName } from './utils/constants';
- 
+import wasm from 'vite-plugin-wasm';
+
 const root = resolve(__dirname, 'src');
 const pagesDir = resolve(root, 'pages');
 const assetsDir = resolve(root, 'assets');
@@ -19,7 +20,7 @@ export default defineConfig({
       '@pages': pagesDir,
     },
   },
-  plugins: [react(), makeManifest(), buildContentScript()],
+  plugins: [react(), makeManifest(), buildContentScript(), wasm()],
   publicDir,
   build: {
     outDir,

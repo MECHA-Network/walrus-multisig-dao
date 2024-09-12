@@ -11,12 +11,9 @@ dependencies:
   '@mysten/sui':
     specifier: ^1.8.0
     version: 1.8.0(typescript@4.9.5)
-  '@types/argon2-browser':
-    specifier: ^1.18.4
-    version: 1.18.4
-  argon2-browser:
-    specifier: ^1.18.0
-    version: 1.18.0
+  argon2:
+    specifier: ^0.41.1
+    version: 0.41.1
   classnames:
     specifier: ^2.5.1
     version: 2.5.1
@@ -82,6 +79,9 @@ devDependencies:
   vite:
     specifier: ^4.0.4
     version: 4.4.3(@types/node@18.16.19)
+  vite-plugin-wasm:
+    specifier: ^3.3.0
+    version: 3.3.0(vite@4.4.3)
 
 packages:
 
@@ -508,6 +508,11 @@ packages:
       fastq: 1.15.0
     dev: true
 
+  /@phc/format@1.0.0:
+    resolution: {integrity: sha512-m7X9U6BG2+J+R1lSOdCiITLLrxm+cWlNI3HUFA92oLO77ObGNzaKdh8pMLqdZcshtkKuV84olNNXDfMc4FezBQ==}
+    engines: {node: '>=10'}
+    dev: false
+
   /@scure/base@1.1.8:
     resolution: {integrity: sha512-6CyAclxj3Nb0XT7GHK6K4zK6k2xJm6E4Ft0Ohjt4WgegiFUHEtFb2CGzmPmGBwoIhrLsqNLYfLr04Y1GePrzZg==}
     dev: false
@@ -663,10 +668,6 @@ packages:
     resolution: {integrity: sha1-C5LcwMwcgfbzBqOB8o4xsaVlNuk=, tarball: https://registry.npmmirror.com/@tsconfig/node16/download/@tsconfig/node16-1.0.4.tgz}
     dev: true
 
-  /@types/argon2-browser@1.18.4:
-    resolution: {integrity: sha512-K/PHAEKzdCY4mCRhgUTBcuTxeaJyLoPcd5pJ1UFSTb/FAPjj3TCK4EM/DvNmVtDzkQBMD5peJjtch3kVQDf4YQ==}
-    dev: false
-
   /@types/chrome@0.0.241:
     resolution: {integrity: sha1-xidO8jd6zk5ncTWRqswT2ObB3KY=, tarball: https://registry.npmmirror.com/@types/chrome/download/@types/chrome-0.0.241.tgz}
     dependencies:
@@ -773,8 +774,14 @@ packages:
     resolution: {integrity: sha1-yBQzzEJ8ksTc9IZRQtvKbxWs1Zw=, tarball: https://registry.npmmirror.com/arg/download/arg-5.0.2.tgz}
     dev: true
 
-  /argon2-browser@1.18.0:
-    resolution: {integrity: sha512-ImVAGIItnFnvET1exhsQB7apRztcoC5TnlSqernMJDUjbc/DLq3UEYeXFrLPrlaIl8cVfwnXb6wX2KpFf2zxHw==}
+  /argon2@0.41.1:
+    resolution: {integrity: sha512-dqCW8kJXke8Ik+McUcMDltrbuAWETPyU6iq+4AhxqKphWi7pChB/Zgd/Tp/o8xRLbg8ksMj46F/vph9wnxpTzQ==}
+    engines: {node: '>=16.17.0'}
+    requiresBuild: true
+    dependencies:
+      '@phc/format': 1.0.0
+      node-addon-api: 8.1.0
+      node-gyp-build: 4.8.2
     dev: false
 
   /autoprefixer@10.4.14(postcss@8.4.26):
@@ -1225,6 +1232,16 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  /node-addon-api@8.1.0:
+    resolution: {integrity: sha512-yBY+qqWSv3dWKGODD6OGE6GnTX7Q2r+4+DfpqxHSHh8x0B4EKP9+wVGLS6U/AM1vxSNNmUEuIV5EGhYwPpfOwQ==}
+    engines: {node: ^18 || ^20 || >= 21}
+    dev: false
+
+  /node-gyp-build@4.8.2:
+    resolution: {integrity: sha512-IRUxE4BVsHWXkV/SFOut4qTlagw2aM8T5/vnTsmrHJvVoKueJHRc/JaFND7QDDc61kLYUJ6qlZM3sqTSyx2dTw==}
+    hasBin: true
+    dev: false
+
   /node-releases@2.0.13:
     resolution: {integrity: sha1-1e0WJ8I+NGHoGbAuV7deSJmxyB0=, tarball: https://registry.npmmirror.com/node-releases/download/node-releases-2.0.13.tgz}
     dev: true
@@ -1663,6 +1680,14 @@ packages:
     dependencies:
       vite: 4.4.3(@types/node@18.16.19)
     dev: false
+
+  /vite-plugin-wasm@3.3.0(vite@4.4.3):
+    resolution: {integrity: sha512-tVhz6w+W9MVsOCHzxo6SSMSswCeIw4HTrXEi6qL3IRzATl83jl09JVO1djBqPSwfjgnpVHNLYcaMbaDX5WB/pg==}
+    peerDependencies:
+      vite: ^2 || ^3 || ^4 || ^5
+    dependencies:
+      vite: 4.4.3(@types/node@18.16.19)
+    dev: true
 
   /vite@4.4.3(@types/node@18.16.19):
     resolution: {integrity: sha1-36+G9MujBYvyck4uLIglT7DyGlo=, tarball: https://registry.npmmirror.com/vite/download/vite-4.4.3.tgz}

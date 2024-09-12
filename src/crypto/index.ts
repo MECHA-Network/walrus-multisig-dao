@@ -1,8 +1,8 @@
 import passworder from '@metamask/browser-passworder';
 import cryptoRandomString from 'crypto-random-string';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
+import argon2 from "argon2";
 
-import * as argon2 from 'argon2-browser';
 /**
  * Encrypts data using a user-provided password.
  *
@@ -12,16 +12,11 @@ import * as argon2 from 'argon2-browser';
  */
 export async function encryptAndStoreData(password: string, data: any){
   try {
-    // const encryptedData = await passworder.encrypt(password, data);
+    let encryptedData = await passworder.encrypt(password, data) as string || null;
     console.log("Setting storage:");
-    chrome.storage.local.set({ encryptedPrivateKey: "test key" });
-    // chrome.storage.local.set({ data }, () => {
-    //   console.log("Data stored successfully");
-    //   // Clear the data from memory
-    //   data = null;
-    // });
-    
-    // return JSON.stringify(encryptedData);
+    chrome.storage.local.set({ encryptedPrivateKey: encryptedData }, () => {
+      encryptedData = null;
+    });
   } catch (error) {
     console.error('Encryption failed:', error);
     throw error;
@@ -62,14 +57,12 @@ export async function saveSuiKeypairAndAddress(password: string){
 }
 
 export async function hashArgon2(password: string, salt: string): Promise<string> {
-    const hashResult = await argon2.hash({
-      pass: password,
-      salt: salt,
-      hashLen: 32
+    const hashResult = await argon2.hash(password, { 
+      hashLength: 32,
+      salt: Buffer.from(salt, "utf-8"),
     });
-    console.log('Hash:', hashResult.encoded);
-    console.log('Hash Hex:', hashResult.hashHex);
-    return hashResult.encoded;
+
+    return hashResult;
 }
 
 
