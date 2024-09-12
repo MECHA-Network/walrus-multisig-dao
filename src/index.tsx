@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Panel from "@pages/panel/Panel";
-import c from "@pages/content";
 import "./index.css";
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 

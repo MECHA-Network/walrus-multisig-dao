@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { APP_COLLAPSE_WIDTH, APP_EXTEND_WIDTH, URLS } from './const';
 import classNames from 'classnames';
 import { Auth } from "../components/Auth";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 import Button from './Button';
 export default function Panel(): JSX.Element {
@@ -24,19 +26,23 @@ export default function Panel(): JSX.Element {
   }
 
   useEffect(() => {
-    chrome.storage.local.get('isLoggedIn', function(result) {
-      if (result.isLoggedIn) {
-        setLoggedIn(true);
-      }
-      else{
-        setLoggedIn(false);
-      }
-    });
+    // chrome.storage.local.get('isLoggedIn', function(result) {
+    //   if (result.isLoggedIn) {
+    //     setLoggedIn(true);
+    //   }
+    //   else{
+    //     setLoggedIn(false);
+    //   }
+    // });
   }, []);
 
   if (!loggedIn) {
     return (
-      <Auth />
+      <>
+         <ToastContainer />
+         <Auth />
+      </>
+   
     )
   }
   else{

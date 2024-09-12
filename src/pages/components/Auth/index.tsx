@@ -1,13 +1,17 @@
 import './index.css';
 import { useEffect, useState } from 'react';
-
+import { toast } from 'react-toastify';
 import { encryptAndStoreData, decryptAndGetData, checkAccountCreated } from '../../../crypto';
+
+
 interface CustomCSSProperties extends React.CSSProperties {
     '--i': string;
 }
 
 export function Auth () {
-    const [accountCreated, setAccountCreated] = useState(true);
+    const [accountCreated, setAccountCreated] = useState(false);
+    const [pass, setPass] = useState("");
+    const [repass, setRePass] = useState("");
      
     useEffect(() => {
        async function setIfLoggedIn() {
@@ -15,6 +19,7 @@ export function Auth () {
        }
        setIfLoggedIn();
     }, []);
+
     async function isUserLoggedIn(): Promise<boolean> {
         const storedData = await chrome.storage.local.get("isLoggedIn");
         return storedData.isLoggedIn === true;
@@ -22,37 +27,45 @@ export function Auth () {
       
      async function login(e: { preventDefault: () => void; }) {
         e.preventDefault()
+        console.log("logging in");
 
-        await encryptAndStoreData("encryptedKey", "test")
-        const test = await decryptAndGetData("test", "test")
+        // await decryptAndGetData("test", "test")
      }
 
      async function register(e: { preventDefault: () => void; }) {
         e.preventDefault()
-        console.log("test....");
-        await encryptAndStoreData("test", "test")
-        const test = await decryptAndGetData("test", "test")
+        console.log("Registering");
+        
+        if (pass !== repass) {
+            toast.error("Passwords do not match");
+        }
+        // await encryptAndStoreData("test", "test")
      }
-
 
     return (
         <div className="container">
         <div className="login-box">
-            <h2>{accountCreated ? "Enter your password 🔓" : "Create new password 🔐"}</h2>
+            <h2>{accountCreated ?  "Enter your password 🔓": "Create new password"}</h2>
             <form action="#">
                 <div className="input-box">
-                    <input type="password" required />
+                    <input type="password" required 
+                    onChange={(e) => {
+                        setPass(e.target.value)
+                     }}/>
                     <label>Password</label>
                 </div>
-                {accountCreated && 
+                {!accountCreated && 
                  <div className="input-box">
-                 <input type="password" required />
+                 <input type="password" required 
+                 onChange={(e) => {
+                    setRePass(e.target.value)
+                 }}/>
                  <label>Retype Password</label>
              </div>
                 }
                 <button onClick={accountCreated ? login : register} type='submit' className="btn">{accountCreated ? "Log In" : "Create Password"} </button>
                 <div className="signup-link">
-                    <a href="#">{!accountCreated ? "Forgot your password?" : "Change password"}</a>
+                    <a href="#">{accountCreated ? "Forgot your password?" : ""}</a>
                 </div>
             
             </form>

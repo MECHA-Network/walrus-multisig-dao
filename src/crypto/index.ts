@@ -13,7 +13,6 @@ import argon2 from 'argon2-wasm-esm';
 export async function encryptAndStoreData(password: string, data: any){
   try {
     let encryptedData = await passworder.encrypt(password, data) as string || null;
-    console.log("Setting storage:");
     chrome.storage.local.set({ encryptedPrivateKey: encryptedData }, () => {
       encryptedData = null;
     });
