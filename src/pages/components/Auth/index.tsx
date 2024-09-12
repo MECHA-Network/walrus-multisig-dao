@@ -1,12 +1,20 @@
 import './index.css';
+import { useEffect, useState } from 'react';
 
-import { encryptAndStoreData, decryptAndGetData } from '../../../crypto';
+import { encryptAndStoreData, decryptAndGetData, checkAccountCreated } from '../../../crypto';
 interface CustomCSSProperties extends React.CSSProperties {
     '--i': string;
 }
 
 export function Auth () {
-    const accountCreated= true;
+    const [accountCreated, setAccountCreated] = useState(true);
+     
+    useEffect(() => {
+       async function setIfLoggedIn() {
+        await checkAccountCreated();
+       }
+       setIfLoggedIn();
+    }, []);
     async function isUserLoggedIn(): Promise<boolean> {
         const storedData = await chrome.storage.local.get("isLoggedIn");
         return storedData.isLoggedIn === true;
@@ -14,8 +22,8 @@ export function Auth () {
       
      async function login(e: { preventDefault: () => void; }) {
         e.preventDefault()
-        console.log("test....");
-        await encryptAndStoreData("test", "test")
+
+        await encryptAndStoreData("encryptedKey", "test")
         const test = await decryptAndGetData("test", "test")
      }
 
@@ -42,11 +50,8 @@ export function Auth () {
                  <label>Retype Password</label>
              </div>
                 }
-              
-                
                 <button onClick={accountCreated ? login : register} type='submit' className="btn">{accountCreated ? "Log In" : "Create Password"} </button>
                 <div className="signup-link">
-                
                     <a href="#">{!accountCreated ? "Forgot your password?" : "Change password"}</a>
                 </div>
             

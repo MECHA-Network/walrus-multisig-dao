@@ -1,7 +1,7 @@
 import passworder from '@metamask/browser-passworder';
 import cryptoRandomString from 'crypto-random-string';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
-import argon2 from "argon2";
+import argon2 from 'argon2-wasm-esm';
 
 /**
  * Encrypts data using a user-provided password.
@@ -56,13 +56,14 @@ export async function saveSuiKeypairAndAddress(password: string){
   const sui_address = keypair.getPublicKey().toSuiAddress();
 }
 
-export async function hashArgon2(password: string, salt: string): Promise<string> {
-    const hashResult = await argon2.hash(password, { 
-      hashLength: 32,
-      salt: Buffer.from(salt, "utf-8"),
+async function hashArgon2(password: string, salt: string): Promise<string> {
+    const hashResult = await argon2.hash({
+      pass: password,
+      salt: salt,
+      hashLen: 32,
     });
+    return hashResult.encoded;
 
-    return hashResult;
 }
 
 

@@ -5,6 +5,7 @@ import makeManifest from './utils/plugins/make-manifest';
 import buildContentScript from './utils/plugins/build-content-script';
 import { outputFolderName } from './utils/constants';
 import wasm from 'vite-plugin-wasm';
+import topLevelAwait from 'vite-plugin-top-level-await';
 
 const root = resolve(__dirname, 'src');
 const pagesDir = resolve(root, 'pages');
@@ -20,7 +21,7 @@ export default defineConfig({
       '@pages': pagesDir,
     },
   },
-  plugins: [react(), makeManifest(), buildContentScript(), wasm()],
+  plugins: [react(), makeManifest(), buildContentScript(), wasm(), topLevelAwait()],
   publicDir,
   build: {
     outDir,
