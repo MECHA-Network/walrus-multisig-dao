@@ -1,0 +1,66 @@
+.wallet-home {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+  }
+  
+  .wallet-header, .wallet-balance, .multisig-info, .assets-section, .actions-section, .dao-section, .footer {
+    padding: 20px;
+    margin: 10px 0;
+    border-radius: 15px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .wallet-header:hover {
+    transform: translateY(-5px);
+  }
+  
+  .avatar {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  
+  .wallet-info h2, .wallet-info p {
+    margin: 5px 0;
+  }
+  
+  .copy-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .copy-btn:hover {
+    color: green;
+  }
+  
+  .actions-section button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .actions-section button:hover {
+    background: #45a049;
+  }
+  
+  .banner {
+    font-size: 18px;
+    text-decoration: none;
+    color: blue;
+  }
+  
+  .social-links a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #555;
+  }
+  
+  .social-links a:hover {
+    color: #000;
+  }
+  

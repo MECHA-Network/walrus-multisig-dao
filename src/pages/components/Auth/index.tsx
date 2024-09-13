@@ -1,5 +1,5 @@
 import './index.css';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { encryptAndStoreData, decryptAndGetData, checkAccountCreated, getSuiKeyAndAddress } from '../../../crypto';
 
@@ -7,33 +7,31 @@ interface CustomCSSProperties extends React.CSSProperties {
     '--i': string;
 }
 
-export function Auth () {
+interface AuthProps {
+    setLoggedIn: Dispatch<SetStateAction<boolean>>;
+}
+  
+export function Auth ({setLoggedIn} : AuthProps) {
     const [accountCreated, setAccountCreated] = useState(false);
     const [pass, setPass] = useState("");
-  
     const [repass, setRePass] = useState("");
     
     useEffect(() => {
-       async function setIfLoggedIn() {
+       async function setIfAccountCreated() {
         await checkAccountCreated();
        }
-       setIfLoggedIn();
+       setIfAccountCreated();
     }, []);
-
-    async function isUserLoggedIn(): Promise<boolean> {
-        const storedData = await chrome.storage.local.get("isLoggedIn");
-        return storedData.isLoggedIn === true;
-      }
       
      async function login(e: { preventDefault: () => void; }) {
         e.preventDefault()
         try {
           await decryptAndGetData(pass);
           toast.success("Login Successful 🎉")
+          setLoggedIn(true);
         } catch (error) {
             toast.error("Wrong password")
-        }
-        
+        }  
      }
 
      async function register(e: { preventDefault: () => void; }) {

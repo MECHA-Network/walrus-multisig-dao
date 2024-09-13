@@ -1,28 +1,31 @@
+
+
 export const URLS = [
+  
     {
-      name: 'Unsplash',
-      url: 'https://images.unsplash.com/photo-1523670982602-6bb44fd1586e?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      image: 'https://images.unsplash.com/photo-1523670982602-6bb44fd1586e?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+      name: 'Home',
+      url: 'https://images.unsplash.com/photo-1584384689201-e0bcbe2c7f1d?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      image: '../../../home.svg'
     },
     {
-      name: 'Wikipedia',
-      url: '//wikipedia.com/',
-      image: '//upload.wikimedia.org/wikipedia/commons/thumb/7/75/Wikipedia_mobile_app_logo.png/64px-Wikipedia_mobile_app_logo.png'
+      name: 'Asset',
+      url: 'https://images.unsplash.com/photo-1584384689201-e0bcbe2c7f1d?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      image: '../../../asset.svg'
     },
     {
-      name: 'Gitlab',
-      url: '//gitlab.com',
-      image: '//about.gitlab.com/images/press/press-kit-icon.svg'
+      name: 'Request',
+      url: 'https://images.unsplash.com/photo-1584384689201-e0bcbe2c7f1d?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      image: '../../../txReq.svg'
     },
     {
       name: 'React',
-      url: '//reactjs.org/',
-      image: '//upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg'
+      url: 'https://images.unsplash.com/photo-1584384689201-e0bcbe2c7f1d?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      image: '../../../multisigWallet.svg'
     },
     {
       name: 'Parcel',
-      url: '//parceljs.org/',
-      image: '//parceljs.org/avatar.733335a8.avif'
+      url: 'https://images.unsplash.com/photo-1584384689201-e0bcbe2c7f1d?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      image: '../../../history.svg'
     },
   ] as const;
   
