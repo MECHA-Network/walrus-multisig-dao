@@ -1,4 +1,4 @@
-import { encrypt } from '@metamask/browser-passworder';
+import { encrypt, decrypt } from '@metamask/browser-passworder';
 import cryptoRandomString from 'crypto-random-string';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import argon2 from 'argon2-wasm-esm';
@@ -12,15 +12,12 @@ import argon2 from 'argon2-wasm-esm';
  */
 export async function encryptAndStoreData(password: string, data: any){
   try {
-    let encryptedData = await encrypt(password, data) as string || null;
-    console.log({encryptedData});
-    
+    let encryptedData = (await encrypt(password, data)) as string || null;
     chrome.storage.local.set({ encryptedPrivateKey: encryptedData }, () => {
       encryptedData = null;
     });
   } catch (error) {
     console.error('Encryption failed:', error);
-    throw error;
   }
 }
 
@@ -31,12 +28,11 @@ export async function encryptAndStoreData(password: string, data: any){
  * @param encryptedData - The encrypted data to be decrypted.
  * @returns A promise resolving to the decrypted data.
  */
-export async function decryptAndGetData(password: string): Promise<any> {
+export async function decryptAndGetData(password: string){
   try {
-    const encryptedPrivateKey = (await chrome.storage.local.get("encryptedPrivateKey")) as any;
+    const res = (await chrome.storage.local.get("encryptedPrivateKey")) as any;
     // const parsedEncryptedData = JSON.parse(encryptedData);
-    const decryptedData = await passworder.decrypt(password, encryptedPrivateKey);
-    return decryptedData;
+    await decrypt(password, res.encryptedPrivateKey);
   } catch (error) {
     console.error('Decryption failed:', error);
     throw error;

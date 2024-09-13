@@ -10,7 +10,7 @@ interface CustomCSSProperties extends React.CSSProperties {
 export function Auth () {
     const [accountCreated, setAccountCreated] = useState(false);
     const [pass, setPass] = useState("");
-    const [data, setData] = useState("");
+  
     const [repass, setRePass] = useState("");
     
     useEffect(() => {
@@ -28,8 +28,8 @@ export function Auth () {
      async function login(e: { preventDefault: () => void; }) {
         e.preventDefault()
         try {
-            const res = await decryptAndGetData(pass);
-            setData(res)
+          await decryptAndGetData(pass);
+          toast.success("Login Successful 🎉")
         } catch (error) {
             toast.error("Wrong password")
         }
@@ -44,14 +44,19 @@ export function Auth () {
             toast.error("Passwords do not match");
             return;
         }
-        const newSuiCred = await getSuiKeyAndAddress(pass);
-        await chrome.storage.local.set({"suiAddress": newSuiCred.suiAddrs});
-        await encryptAndStoreData(pass, newSuiCred.scrKey);
-        await chrome.storage.local.set({"accountCreated": true});
-        const encrypted = await chrome.storage.local.get("encryptedPrivateKey")
-
-        // setAccountCreated(true);
-        toast.success("New Account 🎉" + JSON.stringify(encrypted))
+        try {
+            const newSuiCred = await getSuiKeyAndAddress(pass);
+            await chrome.storage.local.set({"suiAddress": newSuiCred.suiAddrs});
+            await encryptAndStoreData(pass, newSuiCred.scrKey);
+            await chrome.storage.local.set({"accountCreated": true});
+            toast.success("New Account Created 🎉")
+            setPass("");
+            setRePass("");
+            setAccountCreated(true);
+        } catch (error) {
+            toast.error("Create password failed.")
+        }
+        
      }
 
     return (
@@ -60,7 +65,7 @@ export function Auth () {
             <h2>{accountCreated ?  "Enter your password 🔓": "Create new password"}</h2>
             <form action="#">
                 <div className="input-box">
-                    <input type="password" required 
+                    <input type="password" required value={pass}
                     onChange={(e) => {
                         setPass(e.target.value)
                      }}/>
@@ -68,7 +73,7 @@ export function Auth () {
                 </div>
                 {!accountCreated && 
                  <div className="input-box">
-                 <input type="password" required 
+                 <input type="password" required value={repass}
                  onChange={(e) => {
                     setRePass(e.target.value)
                  }}/>
