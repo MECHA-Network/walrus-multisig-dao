@@ -20,7 +20,7 @@ export default defineConfig({
       '@src': root,
       '@assets': assetsDir,
       '@pages': pagesDir,
-       buffer: 'buffer',
+      buffer: 'buffer'
     },
   },
   plugins: [react(), makeManifest(), buildContentScript(), wasm(), topLevelAwait()],

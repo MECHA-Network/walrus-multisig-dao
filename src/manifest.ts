@@ -29,7 +29,7 @@ const manifest: Manifest.WebExtensionManifest = {
   icons: {
     '128': 'icon-128.png',
   },
-  permissions: ["storage", "activeTab", "sidePanel"],
+  permissions: ["storage", "activeTab", "alarms", "sidePanel", "scripting", "webRequest", "unlimitedStorage", "identity"],
   content_scripts: [
     {
       matches: ['http://*/*', 'https://*/*', '<all_urls>'],
@@ -42,6 +42,10 @@ const manifest: Manifest.WebExtensionManifest = {
       resources: ['contentStyle.css', 'icon-128.png', 'icon-34.png', "*.svg"],
       matches: [],
     },
+    {
+			resources: ["src/pages/dapp-interface/index.js", "dapp-interface.js"],
+			matches: ["<all_urls>"]
+		},
   ],
 };
 
