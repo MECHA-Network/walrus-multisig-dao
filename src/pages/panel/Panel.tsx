@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import { APP_COLLAPSE_WIDTH, APP_EXTEND_WIDTH, URLS } from "./const";
 import classNames from "classnames";
 import { Auth } from "../components/Auth";
-import { WalletHomePage } from "../components/Home";
+import Boulder from "../components/boulder"
+import { gradientOptions } from "../components/boulder/gradients"
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
@@ -59,19 +60,30 @@ export default function Panel(): JSX.Element {
           }}
           className="absolute top-0 right-0 bottom-0 z-max bg-[#F5F8FA] ease-in-out duration-300 overflow-hidden"
         >
-          <img
+          <div
             className={classNames(
-              "absolute w-full h-full border-none ease-linear overflow-hidden",
+              "absolute w-full h-full border-none ease-linear overflow-hidden p-2",
               {
                 "opacity-0": !enabled,
                 "-z-10": !enabled,
               }
             )}
-            title={URLS[tabIndex].name}
-            src={URLS[tabIndex].url}
+            style={{
+              backgroundImage: `url(${URLS[tabIndex].url})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+
+            // title={URLS[tabIndex].name}
+            // background-image={URLS[tabIndex].url}
           >
-           
-          </img>
+           <div
+           className="text-black">
+            <Boulder gradient={gradientOptions.nonLinearGradient3.gradient} text={URLS[tabIndex].name} textColor={gradientOptions.nonLinearGradient3.color} textSize="32px"></Boulder>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellat voluptas magni assumenda numquam facere adipisci velit provident earum tenetur quia nemo perferendis, quas et. Amet, repellendus quo. Aspernatur, quisquam fuga.
+           </div>
+           <h1>{URLS[tabIndex].name}</h1>
+          </div>
          
           <div
             className={classNames(
@@ -98,7 +110,7 @@ export default function Panel(): JSX.Element {
               );
             })}
           </div>
-          
+
             <div>
           <div className="absolute bottom-0 left-0 w-[50px] z-10 flex justify-center items-center p-1">
             <Button active={enabled} onClick={() => openPanel()}>
