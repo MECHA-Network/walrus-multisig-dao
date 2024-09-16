@@ -5,10 +5,14 @@ import { shortenSuiAddress } from "../utils"
 import CopyableAddress from "../copyText";
 import Button from "../button";
 import { suiClient } from "../provider";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { decrypt } from '@metamask/browser-passworder';
+import { createSuiKeypairFromPrivateKey } from "../../../crypto";
+import { toast } from 'react-toastify';
 
 const Wallet: React.FC = () => {
   const [walletAddress, setWalletAddress] = useState("");
-  
+
   useEffect(() => {
     async function getWalletAddress() {
        const address = await chrome.storage.local.get("suiAddress");
@@ -21,7 +25,16 @@ const Wallet: React.FC = () => {
     
   }
 
-  function registerAccount() {
+  async function registerAccount() {
+    console.log("Clicked");
+    
+    const res = (await chrome.storage.local.get("encryptedPrivateKey")) as any;
+    try {
+      const privateKey = await decrypt("", res.encryptedPrivateKey);
+      const keyPair = createSuiKeypairFromPrivateKey(privateKey+"");
+    } catch (error) {
+      toast.error("Wrong password")
+    }
     
   }
 
@@ -48,7 +61,7 @@ const Wallet: React.FC = () => {
             <div className="flex flex-col items-center space-y-2">
                 <Boulder text="- Multisig Addresses -" gradient={gradientOptions.warmCoralGradient.gradient} textColor={gradientOptions.warmCoralGradient.color} textSize={"15px"} />
                 <Boulder text={shortenSuiAddress(walletAddress)} gradient={gradientOptions.nonLinearGradient1.gradient} textColor={gradientOptions.nonLinearGradient1.color} textSize={"11px"} />
-            </div>
+            </div>   
         </Boulder>
     </div>
    

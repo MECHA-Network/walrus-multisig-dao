@@ -1,7 +1,19 @@
 import { encrypt, decrypt } from '@metamask/browser-passworder';
 import cryptoRandomString from 'crypto-random-string';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
+import { decodeSuiPrivateKey } from '@mysten/sui/cryptography';
 import argon2 from 'argon2-wasm-esm';
+
+export function createSuiKeypairFromPrivateKey(privateKeyString: string): Ed25519Keypair {
+  if (!privateKeyString.startsWith('suiprivkey')) {
+    throw new Error('Private key must start with "suiprivkey"');
+  }
+
+  const parsed = decodeSuiPrivateKey(privateKeyString);
+
+  // Create and return the keypair
+  return Ed25519Keypair.fromSecretKey(parsed.secretKey);
+}
 
 /**
  * Encrypts data using a user-provided password.

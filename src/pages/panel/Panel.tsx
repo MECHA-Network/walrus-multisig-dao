@@ -85,6 +85,8 @@ export default function Panel(): JSX.Element {
           >
            <div
            className="text-black">
+           <ToastContainer />
+
             <Boulder gradient={gradientOptions.nonLinearGradient3.gradient} text={URLS[tabIndex].name} textColor={gradientOptions.nonLinearGradient3.color} textSize="32px"/>
    
             {(URLS[tabIndex].name+"")==="Wallet" && <Wallet/>}
