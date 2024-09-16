@@ -74,7 +74,7 @@ const Wallet: React.FC = () => {
         }) 
         const publicKey = res.results;
         const byteArray = res.results?.[0]?.returnValues?.[0]?.[0]
-        toast.success(JSON.stringify(byteArray));
+        toast.success("Notified other multisig members ✅");
         publicKeys.push(publicKey);
       }  
     } catch (error) {

@@ -1,4 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { Transaction } from "@mysten/sui/transactions";
+import { suiClient } from "../provider";
+import { decrypt } from '@metamask/browser-passworder';
+import { createSuiKeypairFromPrivateKey } from '@src/crypto';
+import { Ed25519Keypair, Ed25519PublicKey } from "@mysten/sui/keypairs/ed25519";
 
 // Proposal type definition
 interface Proposal {
@@ -20,12 +26,66 @@ const DAOComponent: React.FC = () => {
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
   const [showVoteConfirmation, setShowVoteConfirmation] = useState(false);
   const [currentProposalId, setCurrentProposalId] = useState<number | null>(null);
+  const [currentKeyPair, setCurrentKeyPair] = useState({} as Ed25519Keypair);
 
   const handleCreateProposal = () => {
     setShowConfirmPopup(true);
   };
 
-  const handleConfirmCreate = () => {
+  useEffect(() => {
+    async function init() {
+        const res = (await chrome.storage.local.get("encryptedPrivateKey")) as any;
+      
+          const privateKey = await decrypt("123321", res.encryptedPrivateKey);
+          const keyPair = createSuiKeypairFromPrivateKey(privateKey + "");
+          setCurrentKeyPair(keyPair);
+    }
+    init();  
+  })
+
+  function storeBlob() {
+    const element = window.document.getElementById("id_name");
+    const fileInput = document.getElementById("file-input") as HTMLInputElement;
+    const inputFile = fileInput?.files?.[0];
+    const numEpochs = 500;
+    const publisherUrlInput = "";
+
+    if (!inputFile) {
+      throw new Error("Missing required inputs");
+    }
+
+    // Submit a PUT request with the file's content as the body to the /v1/store endpoint.
+    return fetch(`${"https://publisher-devnet.walrus.space"}/v1/store?epochs=${numEpochs}`, {
+        method: "PUT",
+        body: inputFile,
+    }).then((response) => {
+        if (response.status === 200) {
+            // Parse successful responses as JSON, and return it along with the
+            // mime type from the the file input element.
+            return response.json().then((info) => {
+                console.log(info);
+                toast.success("File uploaded to Walrus.")
+                return { info: info, media_type: inputFile.type };
+            });
+        } else {
+            throw new Error("Something went wrong when storing the blob!");
+        }
+    })
+}
+
+  const handleConfirmCreate = async () => {
+    // const storageInfo = await storeBlob()
+
+    // if (storageInfo && storageInfo.info.newlyCreated && storageInfo.info.newlyCreated.blobObject) {
+    //   toast.success(`Blob ID is ${storageInfo.info.newlyCreated.blobObject}`)
+    // }
+    // else if (storageInfo && storageInfo.info && storageInfo.info.alreadyCertified.blobId) {
+    //     toast.success(`Blob ID is ${storageInfo.info.alreadyCertified.blobId}`)
+    //   } 
+    // else {
+    //   toast.error("Failed to get Blob ID")
+    // }
+
     if (proposalName && file) {
       const newProposal: Proposal = {
         id: proposals.length + 1,
@@ -39,6 +99,44 @@ const DAOComponent: React.FC = () => {
       setProposals([...proposals, newProposal]);
       resetForm();
     }
+    try {
+        const trx = new Transaction();
+        
+        trx.moveCall({
+            target: `0x56a6f42c20f5422292c3ce30dd55746492e75360ec41ade0074290c765fe4bf9::governance::create_proposal`,
+            arguments: [
+                trx.pure.string('Increase Staking Rewards'),
+                trx.object('0x4c75af55472b7cf83ded0d18d7b2c6cbdfc3b0a30a20c346e9ed72441de26a45'),
+                trx.object('0x510545dc37da1fb3459d79f260a457a2530df381f062b6d94ea8fc4c77cd3f05'),
+                trx.pure.u64(100),
+                trx.object('0xb8610294c2f92b9fa50d9253d86e05c3418d60bb4a06a1d3c1c074f15edbbdfd'),
+            ]
+        });
+
+    const res = await suiClient.signAndExecuteTransaction(
+            {
+                signer: currentKeyPair,
+                transaction: trx,
+            },
+           
+        );
+
+        toast.success( <div>
+            <span>Transaction was successful ✅ </span>
+            <a
+              href={`https://testnet.suivision.xyz/txblock/${res.digest}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 underline"
+            >
+              Tx Link
+            </a>
+          </div>)
+    } catch (error) {
+        // toast.error(error+"");
+    }
+        
+    toast.success("Proposal added ✅")
     setShowConfirmPopup(false);
   };
 
@@ -54,7 +152,7 @@ const DAOComponent: React.FC = () => {
     setShowVoteConfirmation(true);
   };
 
-  const handleConfirmVote = () => {
+  const handleConfirmVote = async () => {
     if (currentProposalId !== null) {
       // Increment the vote count for the selected proposal
       const updatedProposals = proposals.map((proposal) =>
@@ -63,6 +161,39 @@ const DAOComponent: React.FC = () => {
       setProposals(updatedProposals);
       setCurrentProposalId(null);
     }
+     try {
+        const trx = new Transaction();
+        trx.moveCall({
+            target: `0x56a6f42c20f5422292c3ce30dd55746492e75360ec41ade0074290c765fe4bf9::governance::vote_proposal`,
+            arguments: [
+                trx.object('0x510545dc37da1fb3459d79f260a457a2530df381f062b6d94ea8fc4c77cd3f05'),
+                trx.object('0xb6f03288902c189b1fc4694dbc6fd09c07fb55c47b6e1ca977e46bca9597a164'),
+                trx.object('0xb8610294c2f92b9fa50d9253d86e05c3418d60bb4a06a1d3c1c074f15edbbdfd'),
+                trx.object('0x0000000000000000000000000000000000000000000000000000000000000006')
+            ]
+        });
+
+       const res = await suiClient.signAndExecuteTransaction(
+            {
+                signer: currentKeyPair,
+                transaction: trx,
+            },
+        );
+        toast.success( <div>
+            <span>Transaction was successful ✅ </span>
+            <a
+              href={`https://testnet.suivision.xyz/txblock/${res.digest}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 underline"
+            >
+              Tx Link
+            </a>
+          </div>)
+     } catch (error) {
+        
+     }
+    toast.success("Vote casted ✅")
     setShowVoteConfirmation(false);
   };
 
@@ -80,6 +211,7 @@ const DAOComponent: React.FC = () => {
         />
         <input
           type="file"
+          id="file-input"
           onChange={(e) => e.target.files && setFile(e.target.files[0])}
           className="mb-2"
         />
