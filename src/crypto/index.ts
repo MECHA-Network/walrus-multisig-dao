@@ -6,14 +6,29 @@ import argon2 from 'argon2-wasm-esm';
 import nacl from 'tweetnacl';
 import naclUtil from 'tweetnacl-util';
 
+export function uint8ArrayToBase64(array: Uint8Array): string {
+  return btoa(String.fromCharCode.apply(null, array as unknown as number[]));
+}
+
+export function base64ToUint8Array(base64: string): Uint8Array {
+  const binaryString = atob(base64);
+  const length = binaryString.length;
+  const bytes = new Uint8Array(length);
+  for (let i = 0; i < length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes;
+}
+
+
 // Utility to convert Ed25519 to X25519
-function ed25519ToX25519(publicKey: Uint8Array): Uint8Array {
+export function ed25519ToX25519(publicKey: Uint8Array): Uint8Array {
     // X25519 uses the Curve25519 key pair, so we convert
     return nacl.scalarMult.base(publicKey);
 }
 
 // Encrypting with the X25519 public key
-function encryptMessage(message: string, recipientPublicKey: Uint8Array): { encrypted: Uint8Array, nonce: Uint8Array } {
+export function encryptMessage(message: string, recipientPublicKey: Uint8Array): { encrypted: Uint8Array, nonce: Uint8Array } {
     const nonce = nacl.randomBytes(24); // Generate a nonce
     const messageBytes = naclUtil.decodeUTF8(message);
 
@@ -24,7 +39,7 @@ function encryptMessage(message: string, recipientPublicKey: Uint8Array): { encr
 }
 
 // Decrypting with the X25519 private key
-function decryptMessage(encrypted: Uint8Array, nonce: Uint8Array, recipientPrivateKey: Uint8Array, senderPublicKey: Uint8Array): string {
+export function decryptMessage(encrypted: Uint8Array, nonce: Uint8Array, recipientPrivateKey: Uint8Array, senderPublicKey: Uint8Array): string {
     const decrypted = nacl.box.open(encrypted, nonce, senderPublicKey, recipientPrivateKey);
     
     if (!decrypted) {

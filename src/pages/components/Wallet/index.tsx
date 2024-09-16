@@ -12,6 +12,7 @@ import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { decrypt } from '@metamask/browser-passworder';
 import { createSuiKeypairFromPrivateKey } from "../../../crypto";
 import { toast } from 'react-toastify';
+import { uint8ArrayToBase64, base64ToUint8Array } from "../../../crypto";
 
 const Wallet: React.FC = () => {
   const [walletAddress, setWalletAddress] = useState("");
@@ -33,15 +34,16 @@ const Wallet: React.FC = () => {
     setPassView(true)
   }
 
-
-
   async function registerAccount(password: string) {
     const res = (await chrome.storage.local.get("encryptedPrivateKey")) as any;
     try {
       const privateKey = await decrypt(password, res.encryptedPrivateKey);
       const keyPair = createSuiKeypairFromPrivateKey(privateKey+"");
-      toast.success("Password correct!" + JSON.stringify(keyPair.getPublicKey()))
-      toast.success("Password correct!")
+      toast.success("Password correct!" + (keyPair.getPublicKey().toRawBytes()))
+      const strForm = uint8ArrayToBase64(keyPair.getPublicKey().toRawBytes())
+      toast.success("Password correct2!" + strForm)
+      const backToArrForm = base64ToUint8Array(strForm);
+      toast.success("Password correct3!" + (backToArrForm))
 
     } catch (error) {
       toast.error("Wrong password")
