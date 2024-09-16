@@ -3,6 +3,7 @@ import Boulder from '../boulder';
 import {gradientOptions} from '../boulder/gradients';
 import { shortenSuiAddress } from "../utils"
 import CopyableAddress from "../copyText";
+import PasswordVerification from "../passverify";
 import Button from "../button";
 import { suiClient } from "../provider";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
@@ -12,6 +13,7 @@ import { toast } from 'react-toastify';
 
 const Wallet: React.FC = () => {
   const [walletAddress, setWalletAddress] = useState("");
+  const [passView, setPassView] = useState(false);
 
   useEffect(() => {
     async function getWalletAddress() {
@@ -25,12 +27,14 @@ const Wallet: React.FC = () => {
     
   }
 
-  async function registerAccount() {
-    console.log("Clicked");
-    
+  function gotoPassword() {
+    setPassView(true)
+  }
+
+  async function registerAccount(password: string) {
     const res = (await chrome.storage.local.get("encryptedPrivateKey")) as any;
     try {
-      const privateKey = await decrypt("", res.encryptedPrivateKey);
+      const privateKey = await decrypt(password, res.encryptedPrivateKey);
       const keyPair = createSuiKeypairFromPrivateKey(privateKey+"");
     } catch (error) {
       toast.error("Wrong password")
@@ -45,13 +49,22 @@ const Wallet: React.FC = () => {
         <Boulder text="" gradient={outerGradient} textColor="#ffffff" textSize="20px">
       <div className="flex flex-col items-center w-full space-y-2" style={{ padding: '12px' }}>
         <Boulder text="- Single Addresses -" gradient={gradientOptions.blueGradient.gradient} textColor={gradientOptions.blueGradient.color} textSize={"15px"} />
-        <Boulder text={shortenSuiAddress(walletAddress)} gradient={gradientOptions.coolBlueGradient.gradient} textColor={gradientOptions.coolBlueGradient.color} textSize={"11px"} >  
-        </Boulder>
-        <CopyableAddress address={walletAddress}/> 
-        <div className="flex justify-center space-x-4"> {/* Flexbox for horizontal alignment */}
-      <Button text="Register account 📢" onClick={registerAccount} />
-      <Button text="Add account ➕" onClick={addAccount} />
-    </div>
+       {!passView && (
+        <>
+          <Boulder text={shortenSuiAddress(walletAddress)} gradient={gradientOptions.coolBlueGradient.gradient} textColor={gradientOptions.coolBlueGradient.color} textSize={"11px"} />  
+          <CopyableAddress address={walletAddress}/> 
+          <div className="flex justify-center space-x-4"> {/* Flexbox for horizontal alignment */}
+        <Button text="Register account 📢" onClick={gotoPassword} />
+        <Button text="Add account ➕" onClick={addAccount} />
+      </div>
+        </>
+       )}
+        {passView && (
+          <>
+           <PasswordVerification onVerify={registerAccount}/>
+          </>
+        )}
+        
       </div>
      
     </Boulder>
