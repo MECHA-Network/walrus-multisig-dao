@@ -16,7 +16,7 @@
   "type": "module",
   "dependencies": {
     "@metamask/browser-passworder": "^5.0.1",
-    "@mysten/sui": "^1.8.0",
+    "@mysten/sui": "^1.9.0",
     "argon2-wasm-esm": "^1.0.3",
     "buffer": "^6.0.3",
     "classnames": "^2.5.1",

@@ -4,6 +4,7 @@ import {gradientOptions} from '../boulder/gradients';
 import { shortenSuiAddress } from "../utils"
 import CopyableAddress from "../copyText";
 import Button from "../button";
+import { suiClient } from "../provider";
 
 const Wallet: React.FC = () => {
   const [walletAddress, setWalletAddress] = useState("");
