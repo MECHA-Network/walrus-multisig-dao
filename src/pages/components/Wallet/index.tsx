@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 
 import Boulder from '../boulder';
 import {gradientOptions} from '../boulder/gradients';
+import { Transaction } from "@mysten/sui/transactions";
+
 import { shortenSuiAddress } from "../utils"
 import CopyableAddress from "../copyText";
 import PasswordVerification from "../passverify";
 import Button from "../button";
+import PermissionModal from "../permissionModal";
 import SuiBalance from "../balance";
 import { suiClient } from "../provider";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
@@ -17,6 +20,53 @@ import { uint8ArrayToBase64, base64ToUint8Array } from "../../../crypto";
 const Wallet: React.FC = () => {
   const [walletAddress, setWalletAddress] = useState("");
   const [passView, setPassView] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [pubKey, setPubkey] = useState("");
+  const [currentKeyPair, setCurrentKeyPair] = useState({} as Ed25519Keypair);
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleConfirm = async (userName: string) => {
+    console.log('User granted permission');
+    const trx = new Transaction();
+    trx.moveCall({
+      target: `0xe076eef8635bbafd50e23c724ea88436e32bff9e02e296e6c230efaf9b2aea1e::protocol::add_user`,
+      arguments: [
+        trx.object("0x5aa604fd9df39af8568686d6754af1d0735575975087bce6326bafcb2958708d"),
+        trx.pure.string(userName),
+        trx.pure.string(pubKey),
+      ],
+    })
+    const res = await suiClient.signAndExecuteTransaction({
+      signer: currentKeyPair,
+      transaction: trx
+    })
+    if (res.errors) {
+      toast.error("Transaction failed ❌")
+    }
+    else{
+      toast.success(<div>
+        <span>Transaction was successful ✅ </span>
+        <a 
+          href={`https://testnet.suivision.xyz/txblock/${res.digest}`}
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-blue-500 underline"
+        >
+          Tx Link
+        </a>
+      </div>)
+    }
+    setTimeout(() =>{
+      setModalOpen(false);
+    }, 5000)
+  };
 
   useEffect(() => {
     async function getWalletAddress() {
@@ -39,11 +89,14 @@ const Wallet: React.FC = () => {
     try {
       const privateKey = await decrypt(password, res.encryptedPrivateKey);
       const keyPair = createSuiKeypairFromPrivateKey(privateKey+"");
-      toast.success("Password correct!" + (keyPair.getPublicKey().toRawBytes()))
-      const strForm = uint8ArrayToBase64(keyPair.getPublicKey().toRawBytes())
-      toast.success("Password correct2!" + strForm)
-      const backToArrForm = base64ToUint8Array(strForm);
-      toast.success("Password correct3!" + (backToArrForm))
+      setCurrentKeyPair(keyPair);
+      toast.success("Password correct!")
+      const strForm = uint8ArrayToBase64(keyPair.getPublicKey().toRawBytes());
+      setPubkey(strForm);
+      setTimeout(() => {
+        setPassView(false);
+        handleOpenModal();
+      }, 5000);
 
     } catch (error) {
       toast.error("Wrong password")
@@ -92,6 +145,12 @@ const Wallet: React.FC = () => {
                 <Boulder text={shortenSuiAddress(walletAddress)} gradient={gradientOptions.nonLinearGradient1.gradient} textColor={gradientOptions.nonLinearGradient1.color} textSize={"11px"} />
             </div>   
         </Boulder>
+        <PermissionModal
+        text={'Register your address to be able to part of multisig vault?\n'+ "From Address: " + walletAddress}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirm}
+      />
     </div>
    
   );
