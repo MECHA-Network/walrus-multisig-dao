@@ -44,6 +44,12 @@ importers:
       react-toastify:
         specifier: ^10.0.5
         version: 10.0.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      tweetnacl:
+        specifier: ^1.0.3
+        version: 1.0.3
+      tweetnacl-util:
+        specifier: ^0.15.1
+        version: 0.15.1
       vite-plugin-css-injected-by-js:
         specifier: ^3.1.1
         version: 3.2.0(vite@4.4.3(@types/node@18.16.19))
@@ -1134,6 +1140,9 @@ packages:
       '@swc/wasm':
         optional: true
 
+  tweetnacl-util@0.15.1:
+    resolution: {integrity: sha512-RKJBIj8lySrShN4w6i/BonWp2Z/uxwC3h4y7xsRrpP59ZboCd0GpEVsOnMDYLMmKBpYhb5TgHzZXy7wTfYFBRw==}
+
   tweetnacl@1.0.3:
     resolution: {integrity: sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==}
 
@@ -2157,6 +2166,8 @@ snapshots:
       yn: 3.1.1
     optionalDependencies:
       '@swc/core': 1.7.26
+
+  tweetnacl-util@0.15.1: {}
 
   tweetnacl@1.0.3: {}
 

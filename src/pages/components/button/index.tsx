@@ -3,7 +3,7 @@ import React from 'react';
 
 interface ButtonProps {
   text: string; // Text to display on the button
-  onClick: () => void; // Function to call on button click
+  onClick: () => void | ((password: string) => void); // Function to call on button click
 }
 
 const Button: React.FC<ButtonProps> = ({ text, onClick }) => {

@@ -40,6 +40,9 @@ const Wallet: React.FC = () => {
     try {
       const privateKey = await decrypt(password, res.encryptedPrivateKey);
       const keyPair = createSuiKeypairFromPrivateKey(privateKey+"");
+      toast.success("Password correct!" + JSON.stringify(keyPair.getPublicKey()))
+      toast.success("Password correct!")
+
     } catch (error) {
       toast.error("Wrong password")
     }

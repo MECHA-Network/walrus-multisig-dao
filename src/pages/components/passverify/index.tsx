@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Button from '../button';
 
 interface PasswordVerificationProps {
   onVerify: (password: string) => void;
@@ -22,8 +23,12 @@ const PasswordVerification: React.FC<PasswordVerificationProps> = ({ onVerify })
         placeholder="Enter password"
         value={password}
         onChange={handlePasswordChange}
+        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
-      <button onClick={handleVerify}>Verify</button>
+      <div className='my-3'>
+      <Button text='Verify' onClick={handleVerify}/>
+      </div>
+    
     </div>
   );
 };
