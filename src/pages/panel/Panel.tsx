@@ -10,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 
 import Button from "./Button";
 import Wallet from "../components/Wallet";
+import DAO from "../components/DAO";
 export default function Panel(): JSX.Element {
   const [loggedIn, setLoggedIn] = useState(true);
   const [enabled, setEnabled] = useState(false);
@@ -90,6 +91,7 @@ export default function Panel(): JSX.Element {
             <Boulder gradient={gradientOptions.nonLinearGradient3.gradient} text={URLS[tabIndex].name} textColor={gradientOptions.nonLinearGradient3.color} textSize="32px"/>
    
             {(URLS[tabIndex].name+"")==="Wallet" && <Wallet/>}
+            {(URLS[tabIndex].name+"")==="DAO" && <DAO/>}
           
            </div>
 

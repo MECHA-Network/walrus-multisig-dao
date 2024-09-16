@@ -10,7 +10,7 @@ export const URLS = [
     image: '../../../asset.svg'
   },
   {
-    name: 'Request',
+    name: 'DAO',
     url: 'https://images.unsplash.com/photo-1584384689201-e0bcbe2c7f1d?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     image: '../../../txReq.svg'
   },
