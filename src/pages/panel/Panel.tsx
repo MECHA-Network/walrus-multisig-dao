@@ -68,7 +68,7 @@ export default function Panel(): JSX.Element {
         >
           <div
             className={classNames(
-              "absolute w-full h-full border-none ease-linear overflow-hidden p-2",
+              "absolute w-full h-full border-none ease-linear overflow-y-auto p-2",
               {
                 "opacity-0": !enabled,
                 "-z-10": !enabled,
