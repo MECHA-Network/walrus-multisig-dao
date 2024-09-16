@@ -2,6 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { suiClient } from "../provider"
 import { MIST_PER_SUI } from '@mysten/sui/utils';
+import { getFaucetHost, requestSuiFromFaucetV0 } from '@mysten/sui/faucet';
+import { toast } from 'react-toastify';
+import Button from '../button';
+
 
 export function getBalanceInSui(balance: string) {
     return (Number.parseInt(balance) / Number(MIST_PER_SUI))
@@ -12,7 +16,21 @@ interface SuiBalanceProps {
 }
 
 const SuiBalance: React.FC<SuiBalanceProps> = ({ address }) => {
-  const [balance, setBalance] = useState<number | null>("");
+
+    const getSUIFromFaucet = async () => {
+        try {
+            await requestSuiFromFaucetV0({
+                host: getFaucetHost('testnet'),
+                recipient: address,
+            });
+            fetchBalance();
+            toast("1 Test SUI sent from faucet!");
+        } catch (error) {
+            toast.error("Could not get Sui test coin.")
+        }
+       
+     };
+  const [balance, setBalance] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,6 +56,7 @@ const SuiBalance: React.FC<SuiBalanceProps> = ({ address }) => {
       {loading && <p>Fetching...</p>}
       {error && <p className="text-red-400">{error}</p>}
       {balance !== null && <p className="text-xl">{balance} SUI</p>}
+      <Button text="Get 1 coin" onClick={getSUIFromFaucet} />
     </div>
   );
 };

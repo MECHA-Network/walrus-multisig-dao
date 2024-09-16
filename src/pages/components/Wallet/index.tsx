@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import Boulder from '../boulder';
 import {gradientOptions} from '../boulder/gradients';
 import { shortenSuiAddress } from "../utils"
@@ -31,6 +32,8 @@ const Wallet: React.FC = () => {
   function gotoPassword() {
     setPassView(true)
   }
+
+
 
   async function registerAccount(password: string) {
     const res = (await chrome.storage.local.get("encryptedPrivateKey")) as any;
