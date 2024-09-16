@@ -3,6 +3,37 @@ import cryptoRandomString from 'crypto-random-string';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import { decodeSuiPrivateKey } from '@mysten/sui/cryptography';
 import argon2 from 'argon2-wasm-esm';
+import nacl from 'tweetnacl';
+import naclUtil from 'tweetnacl-util';
+
+// Utility to convert Ed25519 to X25519
+function ed25519ToX25519(publicKey: Uint8Array): Uint8Array {
+    // X25519 uses the Curve25519 key pair, so we convert
+    return nacl.scalarMult.base(publicKey);
+}
+
+// Encrypting with the X25519 public key
+function encryptMessage(message: string, recipientPublicKey: Uint8Array): { encrypted: Uint8Array, nonce: Uint8Array } {
+    const nonce = nacl.randomBytes(24); // Generate a nonce
+    const messageBytes = naclUtil.decodeUTF8(message);
+
+    // Encrypt the message using X25519
+    const encrypted = nacl.box(messageBytes, nonce, recipientPublicKey, nacl.randomBytes(32));
+
+    return { encrypted, nonce };
+}
+
+// Decrypting with the X25519 private key
+function decryptMessage(encrypted: Uint8Array, nonce: Uint8Array, recipientPrivateKey: Uint8Array, senderPublicKey: Uint8Array): string {
+    const decrypted = nacl.box.open(encrypted, nonce, senderPublicKey, recipientPrivateKey);
+    
+    if (!decrypted) {
+        throw new Error('Decryption failed');
+    }
+
+    return naclUtil.encodeUTF8(decrypted);
+}
+
 
 export function createSuiKeypairFromPrivateKey(privateKeyString: string): Ed25519Keypair {
   if (!privateKeyString.startsWith('suiprivkey')) {
