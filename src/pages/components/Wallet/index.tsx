@@ -22,7 +22,9 @@ const Wallet: React.FC = () => {
   const [passView, setPassView] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [pubKey, setPubkey] = useState("");
+  const [userName, setUserName] = useState("");
   const [currentKeyPair, setCurrentKeyPair] = useState({} as Ed25519Keypair);
+
 
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -32,14 +34,14 @@ const Wallet: React.FC = () => {
     setModalOpen(false);
   };
 
-  const handleConfirm = async (userName: string) => {
+  const handleConfirm = async (givenUserName: string) => {
     console.log('User granted permission');
     const trx = new Transaction();
     trx.moveCall({
       target: `0xe076eef8635bbafd50e23c724ea88436e32bff9e02e296e6c230efaf9b2aea1e::protocol::add_user`,
       arguments: [
         trx.object("0x5aa604fd9df39af8568686d6754af1d0735575975087bce6326bafcb2958708d"),
-        trx.pure.string(userName),
+        trx.pure.string(givenUserName),
         trx.pure.string(pubKey),
       ],
     })
@@ -62,6 +64,7 @@ const Wallet: React.FC = () => {
           Tx Link
         </a>
       </div>)
+      await chrome.storage.local.set({"userName": givenUserName});
     }
     setTimeout(() =>{
       setModalOpen(false);
@@ -72,6 +75,13 @@ const Wallet: React.FC = () => {
     async function getWalletAddress() {
        const address = await chrome.storage.local.get("suiAddress");
        setWalletAddress(address.suiAddress);
+      //  const trx = new Transaction();
+      //  suiClient.devInspectTransactionBlock({
+      //   sender:address.suiAddress,
+      //   transactionBlock: trx
+      // })
+      const res = await chrome.storage.local.get("userName");
+      setUserName(res.userName);
     }
     getWalletAddress();
   })
@@ -118,8 +128,19 @@ const Wallet: React.FC = () => {
           <Boulder text={shortenSuiAddress(walletAddress)} gradient={gradientOptions.coolBlueGradient.gradient} textColor={gradientOptions.coolBlueGradient.color} textSize={"17px"} />  
           <div className='pb-3 pt-1'><CopyableAddress address={walletAddress}/></div> 
           <div className="flex justify-center space-x-4 py-3"> {/* Flexbox for horizontal alignment */}
-      
-        <Button text="Register account 📢" onClick={gotoPassword} />
+          {userName === "" ? (
+             <Button text="Register account 📢" onClick={gotoPassword} />
+          ) : (
+            <div  style={{
+              background: gradientOptions.purpleGradient.gradient,
+              border: '1px solid rgba(0, 0, 0, 0.2)',
+              boxShadow: '5px 5px 15px rgba(0, 0, 0, 0.3), 10px 10px 20px rgba(0, 0, 0, 0.2)',
+              maxWidth: 'fit-content',
+              padding: '6px 12px',
+            }}
+            >Username: <h2>{userName}</h2></div>
+          )}
+       
         <Button text="Add account ➕" onClick={addAccount} />
       </div>
       {walletAddress !== "" && <SuiBalance address={walletAddress} />}
@@ -146,7 +167,7 @@ const Wallet: React.FC = () => {
             </div>   
         </Boulder>
         <PermissionModal
-        text={'Register your address to be able to part of multisig vault?\n'+ "From Address: " + walletAddress}
+        text={'Register your address to be able to part of multisig vault?\n'+ "From Address: " + shortenSuiAddress(walletAddress)}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onConfirm={handleConfirm}
