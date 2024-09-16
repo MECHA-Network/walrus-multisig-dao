@@ -17,7 +17,7 @@ const CopyableAddress: React.FC<CopyableAddressProps> = ({ address }) => {
     return (
       <CopyToClipboard text={address} onCopy={handleCopy}>
         <div
-          className={`flex items-center rounded-lg cursor-pointer p-1 transition-colors duration-300 ${
+          className={`flex items-center rounded-lg w-fit cursor-pointer p-1 transition-colors duration-300 ${
             copied ? 'bg-green-500' : 'bg-blue-500'
           }`}
         >

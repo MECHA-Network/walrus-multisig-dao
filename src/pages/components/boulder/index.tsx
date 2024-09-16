@@ -26,7 +26,6 @@ const Boulder: React.FC<BoulderProps> = ({ text, gradient, textColor, textSize, 
             style={{
               color: textColor,
               fontSize: textSize,
-              padding: '12px',
               maxWidth: '100%',
               overflow: 'hidden',
               textOverflow: 'ellipsis',

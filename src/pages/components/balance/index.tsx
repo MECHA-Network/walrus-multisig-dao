@@ -51,8 +51,8 @@ const SuiBalance: React.FC<SuiBalanceProps> = ({ address }) => {
   }, [address]);
 
   return (
-    <div className="flex flex-col items-center p-5 rounded-lg shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-      <h2 className="text-2xl font-bold mb-2">Sui Balance</h2>
+    <div className="flex flex-col items-center p-3 rounded-lg shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+      <h2 className="text-xl font-bold mb-2">Sui Balance</h2>
       {loading && <p>Fetching...</p>}
       {error && <p className="text-red-400">{error}</p>}
       {balance !== null && <p className="text-xl">{balance} SUI</p>}

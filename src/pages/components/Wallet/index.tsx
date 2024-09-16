@@ -53,23 +53,29 @@ const Wallet: React.FC = () => {
         <Boulder text="" gradient={outerGradient} textColor="#ffffff" textSize="20px">
       <div className="flex flex-col items-center w-full space-y-2" style={{ padding: '12px' }}>
         <Boulder text="- Single Addresses -" gradient={gradientOptions.blueGradient.gradient} textColor={gradientOptions.blueGradient.color} textSize={"15px"} />
-       {!passView && (
+      <Boulder text="" gradient={gradientOptions.earthyGradient.gradient} textColor="#ffffff" textSize="20px">
+        <div className='flex flex-col justify-content item-center p-3'>
+        {!passView && (
         <>
-          <Boulder text={shortenSuiAddress(walletAddress)} gradient={gradientOptions.coolBlueGradient.gradient} textColor={gradientOptions.coolBlueGradient.color} textSize={"11px"} />  
-          <CopyableAddress address={walletAddress}/> 
-          <div className="flex justify-center space-x-4"> {/* Flexbox for horizontal alignment */}
+          <Boulder text={shortenSuiAddress(walletAddress)} gradient={gradientOptions.coolBlueGradient.gradient} textColor={gradientOptions.coolBlueGradient.color} textSize={"17px"} />  
+          <div className='pb-3 pt-1'><CopyableAddress address={walletAddress}/></div> 
+          <div className="flex justify-center space-x-4 py-3"> {/* Flexbox for horizontal alignment */}
+      
         <Button text="Register account 📢" onClick={gotoPassword} />
         <Button text="Add account ➕" onClick={addAccount} />
       </div>
+      {walletAddress !== "" && <SuiBalance address={walletAddress} />}
+
         </>
        )}
-        {walletAddress !== "" && <SuiBalance address={walletAddress} />}
         {passView && (
           <>
            <PasswordVerification onVerify={registerAccount}/>
           </>
         )}
-        
+        </div>
+      
+        </Boulder>
       </div>
      
     </Boulder>
