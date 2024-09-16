@@ -5,6 +5,7 @@ import { shortenSuiAddress } from "../utils"
 import CopyableAddress from "../copyText";
 import PasswordVerification from "../passverify";
 import Button from "../button";
+import SuiBalance from "../balance";
 import { suiClient } from "../provider";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { decrypt } from '@metamask/browser-passworder';
@@ -59,6 +60,7 @@ const Wallet: React.FC = () => {
       </div>
         </>
        )}
+        {walletAddress !== "" && <SuiBalance address={walletAddress} />}
         {passView && (
           <>
            <PasswordVerification onVerify={registerAccount}/>
