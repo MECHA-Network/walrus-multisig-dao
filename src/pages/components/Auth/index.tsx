@@ -18,7 +18,8 @@ export function Auth ({setLoggedIn} : AuthProps) {
     
     useEffect(() => {
        async function setIfAccountCreated() {
-        await checkAccountCreated();
+         const created = await checkAccountCreated();
+         setAccountCreated(created);
        }
        setIfAccountCreated();
     }, []);
@@ -28,6 +29,7 @@ export function Auth ({setLoggedIn} : AuthProps) {
         try {
           await decryptAndGetData(pass);
           toast.success("Login Successful 🎉")
+        //   await chrome.storage.local.set({'isLoggedIn': true});   
           setLoggedIn(true);
         } catch (error) {
             toast.error("Wrong password")

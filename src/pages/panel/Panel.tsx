@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
 import Button from "./Button";
+import Wallet from "../components/Wallet";
 export default function Panel(): JSX.Element {
   const [loggedIn, setLoggedIn] = useState(true);
   const [enabled, setEnabled] = useState(false);
@@ -29,6 +30,11 @@ export default function Panel(): JSX.Element {
   }
 
   useEffect(() => {
+    // async function checkLoggedin() {
+    //   const checkIfLoggedIn = await chrome.storage.local.get('isLoggedIn');
+    //   setLoggedIn(checkIfLoggedIn.isLoggedIn);
+    // }
+    // checkLoggedin();
     // chrome.storage.local.get('isLoggedIn', function(result) {
     //   if (result.isLoggedIn) {
     //     setLoggedIn(true);
@@ -79,10 +85,12 @@ export default function Panel(): JSX.Element {
           >
            <div
            className="text-black">
-            <Boulder gradient={gradientOptions.nonLinearGradient3.gradient} text={URLS[tabIndex].name} textColor={gradientOptions.nonLinearGradient3.color} textSize="32px"></Boulder>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellat voluptas magni assumenda numquam facere adipisci velit provident earum tenetur quia nemo perferendis, quas et. Amet, repellendus quo. Aspernatur, quisquam fuga.
+            <Boulder gradient={gradientOptions.nonLinearGradient3.gradient} text={URLS[tabIndex].name} textColor={gradientOptions.nonLinearGradient3.color} textSize="32px"/>
+   
+            {(URLS[tabIndex].name+"")==="Wallet" && <Wallet/>}
+          
            </div>
-           <h1>{URLS[tabIndex].name}</h1>
+
           </div>
          
           <div

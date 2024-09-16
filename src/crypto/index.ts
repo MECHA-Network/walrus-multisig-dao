@@ -41,7 +41,7 @@ export async function decryptAndGetData(password: string){
 
 export async function checkAccountCreated(): Promise<boolean> {
   const storedData = await chrome.storage.local.get("accountCreated");
-  return storedData.accountCreated === true;
+  return storedData.accountCreated;
 }
 
 export async function getSuiKeyAndAddress(password: string): Promise<{ scrKey: string; suiAddrs: string }>{
