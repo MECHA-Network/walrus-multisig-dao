@@ -3,6 +3,7 @@ import Boulder from '../boulder';
 import {gradientOptions} from '../boulder/gradients';
 import { shortenSuiAddress } from "../utils"
 import CopyableAddress from "../copyText";
+import Button from "../button";
 
 const Wallet: React.FC = () => {
   const [walletAddress, setWalletAddress] = useState("");
@@ -15,6 +16,14 @@ const Wallet: React.FC = () => {
     getWalletAddress();
   })
 
+  function addAccount() {
+    
+  }
+
+  function registerAccount() {
+    
+  }
+
   const outerGradient = 'linear-gradient(to bottom right, #ffffff, #f0f0f0)';
 
   return (
@@ -25,7 +34,12 @@ const Wallet: React.FC = () => {
         <Boulder text={shortenSuiAddress(walletAddress)} gradient={gradientOptions.coolBlueGradient.gradient} textColor={gradientOptions.coolBlueGradient.color} textSize={"11px"} >  
         </Boulder>
         <CopyableAddress address={walletAddress}/> 
+        <div className="flex justify-center space-x-4"> {/* Flexbox for horizontal alignment */}
+      <Button text="Register account 📢" onClick={registerAccount} />
+      <Button text="Add account ➕" onClick={addAccount} />
+    </div>
       </div>
+     
     </Boulder>
   
         <br />
