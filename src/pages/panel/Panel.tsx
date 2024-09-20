@@ -7,7 +7,7 @@ import Boulder from "../components/boulder"
 import { gradientOptions } from "../components/boulder/gradients"
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-
+import { login, isLoggedIn } from "../components/session";
 import Button from "./Button";
 import Wallet from "../components/Wallet";
 import DAO from "../components/DAO";
@@ -31,26 +31,14 @@ export default function Panel(): JSX.Element {
   }
 
   useEffect(() => {
-    // async function checkLoggedin() {
-    //   const checkIfLoggedIn = await chrome.storage.local.get('isLoggedIn');
-    //   setLoggedIn(checkIfLoggedIn.isLoggedIn);
-    // }
-    // checkLoggedin();
-    // chrome.storage.local.get('isLoggedIn', function(result) {
-    //   if (result.isLoggedIn) {
-    //     setLoggedIn(true);
-    //   }
-    //   else{
-    //     setLoggedIn(false);
-    //   }
-    // });
+    isLoggedIn(setLoggedIn);
   }, []);
 
   if (!loggedIn) {
     return (
       <>
         <ToastContainer />
-        <Auth setLoggedIn={setLoggedIn} />
+        <Auth loginToApp={login} />
       </>
     );
   } else {

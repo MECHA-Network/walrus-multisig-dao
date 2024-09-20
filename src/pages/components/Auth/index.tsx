@@ -8,10 +8,10 @@ interface CustomCSSProperties extends React.CSSProperties {
 }
 
 interface AuthProps {
-    setLoggedIn: Dispatch<SetStateAction<boolean>>;
+    loginToApp: () => void;
 }
   
-export function Auth ({setLoggedIn} : AuthProps) {
+export function Auth ({loginToApp} : AuthProps) {
     const [accountCreated, setAccountCreated] = useState(true);
     const [pass, setPass] = useState("");
     const [repass, setRePass] = useState("");
@@ -30,8 +30,7 @@ export function Auth ({setLoggedIn} : AuthProps) {
         try {
           await decryptAndGetData(pass);
           toast.success("Login Successful 🎉")
-        //   await chrome.storage.local.set({'isLoggedIn': true});   
-          setLoggedIn(true);
+          loginToApp();
         } catch (error) {
             toast.error("Wrong password")
         }  
