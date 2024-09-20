@@ -12,7 +12,7 @@ import Button from "./Button";
 import Wallet from "../components/Wallet";
 import DAO from "../components/DAO";
 export default function Panel(): JSX.Element {
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [enabled, setEnabled] = useState(false);
   const [sidePanelWidth, setSidePanelWidth] = useState(
     enabled ? APP_EXTEND_WIDTH : APP_COLLAPSE_WIDTH

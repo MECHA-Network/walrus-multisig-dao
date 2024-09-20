@@ -1,8 +1,8 @@
 type IconProps = React.ComponentProps<'svg'>;
 export const CopyIcon = (props: IconProps) => {
     return (
-        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-        width="24" height="24" viewBox="0 0 360 360" xml:space="preserve">
+        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+        width="24" height="24" viewBox="0 0 360 360">
    <path fill="none" opacity="1.000000" stroke="none" 
        d="
    M241.000000,361.000000 

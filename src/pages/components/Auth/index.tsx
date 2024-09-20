@@ -12,13 +12,14 @@ interface AuthProps {
 }
   
 export function Auth ({setLoggedIn} : AuthProps) {
-    const [accountCreated, setAccountCreated] = useState(false);
+    const [accountCreated, setAccountCreated] = useState(true);
     const [pass, setPass] = useState("");
     const [repass, setRePass] = useState("");
     
     useEffect(() => {
        async function setIfAccountCreated() {
          const created = await checkAccountCreated();
+         toast.info(created+" - Created");
          setAccountCreated(created);
        }
        setIfAccountCreated();
